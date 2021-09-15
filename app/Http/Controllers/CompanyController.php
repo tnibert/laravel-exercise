@@ -14,7 +14,8 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        //
+        $companies = Company::all();
+        return $companies->toJson();
     }
 
     /**
@@ -41,8 +42,8 @@ class CompanyController extends Controller
         $co = new Company();
         $co->name = $companyData['name'];
         $co->save();
+        // the following requires allowing mass assignment in model
         //Company::create($companyData);
-        error_log("test3");
         return $co->toJson();
     }
 

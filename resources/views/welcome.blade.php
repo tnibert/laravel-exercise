@@ -36,17 +36,6 @@
                     }
                 })
             });
-            /*.then(r =>  r.json().then(data => ({status: r.status, body: data})))
-            .then(obj => console.log(obj))
-            .then();*/
-
-            /*fetch('http://127.0.0.1:8000/api/employees', {
-            method: "POST",
-            body: JSON.stringify(data2),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-            }).then(res => console.log(res));*/
         </script>
     </body>
 </html>
