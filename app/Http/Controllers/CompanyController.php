@@ -55,7 +55,8 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        //
+        $company = Company::findOrFail($id);
+        return $company->toJson();
     }
 
     /**
@@ -66,7 +67,7 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        //
+        //$company = Company::findOrFail($id);
     }
 
     /**
@@ -78,7 +79,16 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $companyData = $request->validate(['name' => 'string']);
+
+        $company = Company::findOrFail($id);
+        if (array_key_exists("name", $companyData))
+        {
+            $company->name = $companyData["name"];
+            $company->save();
+        }
+
+        return $company->toJson();
     }
 
     /**
@@ -89,6 +99,9 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $company = Company::findOrFail($id);
+        $company->delete();
+
+        return response()->json(['id' => $id, 'deleted' => True,]);
     }
 }
