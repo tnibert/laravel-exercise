@@ -14,5 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    error_log('Some message here.');
     return view('welcome');
+});
+
+Route::get('/newcompany', function () {
+    return view('newcompany');
+});
+
+Route::get('/newemployee', function () {
+    return view('newemployee');
 });
