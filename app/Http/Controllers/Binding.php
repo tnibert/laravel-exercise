@@ -10,15 +10,27 @@ class Binding
 {
     private $model;
 
+    /**
+     * Store the model class to work against
+     */
     function __construct($m) {
         $this->model = $m;
     }
 
+    /**
+     * Display all records for the given model
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         return $this->model::all()->toJson();
     }
 
+    /**
+     * Create a new model
+     * @return Illuminate\Database\Eloquent\Model
+     */
     public function store($request, $validate_rules)
     {
         $resourceData = $request->validate($validate_rules);
@@ -34,6 +46,7 @@ class Binding
     }
 
     /**
+     * Update a model
      * @return Illuminate\Database\Eloquent\Model
      */
     public function update($request, $validate_rules, $id)
@@ -45,6 +58,7 @@ class Binding
     }
 
     /**
+     * Read a model
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
@@ -54,6 +68,10 @@ class Binding
         return $resource->toJson();
     }
 
+    /**
+     * Delete a model
+     * @param  int  $id
+     */
     public function destroy($id)
     {
         $resource = $this->model::findOrFail($id);

@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>DAS test</title>
+        <title>Exercise</title>
 
         <script>
             function sendJSON() {
@@ -24,16 +24,11 @@
         </script>
     </head>
     <body>
-        <h2>Create a new employee</h2>
+        <h2>Create a new company</h2>
         <p>
-            <!-- Making a text input -->
             <input type="text" id="name" placeholder="Company name">
 
-            <!-- Button to send data -->
             <button onclick="sendJSON()">Send JSON</button>
-
-        <!-- For printing result from server -->
-        <p class="result" style="color:green"></p>
 
         </p>
     </body>

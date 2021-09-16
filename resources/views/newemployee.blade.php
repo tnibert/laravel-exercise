@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>DAS test</title>
+        <title>Exercise</title>
 
         <script>
             function getCompanies() {
@@ -58,6 +58,24 @@
                 });
             }
 
+            function getAPIEmployee() {
+                let fname = document.querySelector('#firstname');
+                let lname = document.querySelector('#lastname');
+                let dob = document.querySelector('#dob');
+                let email = document.querySelector('#email');
+
+                fetch('https://randomuser.me/api/' , {
+                    method: "GET"
+                }).then(res => res.json())
+                .then(person => {
+                    console.log(person);
+                    fname.value = person.results[0].name.first;
+                    lname.value = person.results[0].name.last;
+                    dob.value = person.results[0].dob.date;
+                    email.value = person.results[0].email;
+                })
+            }
+
             document.addEventListener("DOMContentLoaded", function(event) {
                 getCompanies();
             });
@@ -74,8 +92,9 @@
             <input type="text" id="dob" placeholder="Employee date of birth"><br>
             <input type="text" id="email" placeholder="Employee email"><br>
 
-            <!-- Button to send data -->
             <button onclick="sendJSON()">Send JSON</button>
+            <br><br>
+            <button onClick="getAPIEmployee()">Get a random seasonal associate</button>
 
         </p>
     </body>

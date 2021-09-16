@@ -25,7 +25,6 @@ class EmployeeController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * todo: error handling
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -49,7 +48,6 @@ class EmployeeController extends Controller
         $employee->dob = $resourceData['dob'];
         $employee->email = $resourceData['email'];
 
-        error_log($employee->company_id);
         // establish foreign key relationship with company
         $co = Company::findOrFail($resourceData['company_id']);
         //$co = Company::findOrFail($employee->company());
