@@ -7,6 +7,12 @@ use App\Models\Company;
 
 class CompanyController extends Controller
 {
+    private $binding;
+
+    function __construct() {
+        $this->binding = new Binding(Company::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,64 +20,35 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all();
-        return $companies->toJson();
+        return $this->binding->index();
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Create operation
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $companyData = $request->validate([
-            'name' => 'required'
-        ]);
-        $co = new Company();
-        $co->name = $companyData['name'];
-        $co->save();
-        // the following requires allowing mass assignment in model
-        //Company::create($companyData);
-        return $co->toJson();
+        $company = $this->binding->store($request, ['name' => 'required']);
+        $company->save();
+        return $company->toJson();
     }
 
     /**
-     * Display the specified resource.
+     * Read operation
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $company = Company::findOrFail($id);
-        return $company->toJson();
+        return $this->binding->show($id);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //$company = Company::findOrFail($id);
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Update operation
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -79,29 +56,19 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $companyData = $request->validate(['name' => 'string']);
-
-        $company = Company::findOrFail($id);
-        if (array_key_exists("name", $companyData))
-        {
-            $company->name = $companyData["name"];
-            $company->save();
-        }
-
+        $company = $this->binding->update($request, ['name' => 'string'], $id);
+        $company->save();
         return $company->toJson();
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete operation
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        $company = Company::findOrFail($id);
-        $company->delete();
-
-        return response()->json(['id' => $id, 'deleted' => True,]);
+        return $this->binding->destroy($id);
     }
 }

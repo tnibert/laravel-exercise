@@ -14,6 +14,9 @@ URLS = {
     "update_delete_show": "{}/api/companies/{}".format(BASEURL, 1)
 }
 
+"""
+todo: make test results independent of execution order, remove dependencies between tests
+"""
 
 def test_store():
     r = requests.post(URLS["store_index"], json={"name": COMPANYNAME})
@@ -21,26 +24,32 @@ def test_store():
     assert r.json() == {'id': 1, 'name': COMPANYNAME}
 
 
+def test_store_no_data():
+    r = requests.post(URLS["store_index"], json={})
+    assert r.status_code == 200
+    # todo: response can't be decoded as json
+    # nothing is being saved to DB
+    print(r)
+
+
+def test_store_extra_data():
+    # extra field will be discarded
+    r = requests.post(URLS["store_index"], json={"name": COMPANYNAME, "extradata": 1})
+    assert r.status_code == 200
+    assert r.json() == {'name': COMPANYNAME, 'id': 2}
+
+
 def test_index():
     r = requests.get(URLS["store_index"])
     assert r.status_code == 200
-    assert r.json() == [{'id': 1, 'name': COMPANYNAME}]
-
-
-@pytest.mark.skip()
-def test_create():
-    pass
+    assert r.json() == [{'id': 1, 'name': COMPANYNAME},
+                        {'id': 2, 'name': 'My Company Name'}]
 
 
 def test_show():
     r = requests.get(URLS["update_delete_show"])
     assert r.status_code == 200
     assert r.json() == {'id': 1, 'name': COMPANYNAME}
-
-
-@pytest.mark.skip()
-def test_edit():
-    pass
 
 
 def test_update_empty_json():
@@ -53,6 +62,12 @@ def test_update_with_data():
     newname = "Bob's Fresh Mowers"
     r = requests.put(URLS["update_delete_show"], json={"name": newname})
     assert r.status_code == 200
+    assert r.json() == {'id': 1, 'name': newname}
+
+
+def test_update_with_extra_data():
+    newname = "Jebediah's Corn Beef"
+    r = requests.put(URLS["update_delete_show"], json={"name": newname, "extradata": 3})
     assert r.json() == {'id': 1, 'name': newname}
 
 

@@ -9,6 +9,7 @@ class Company extends Model
 {
     use HasFactory;
     protected $table = 'companies';
+    protected $fillable = ["name"];
     public $timestamps = false;
 
     public function employees()

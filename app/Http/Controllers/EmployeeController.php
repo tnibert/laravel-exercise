@@ -8,6 +8,11 @@ use App\Models\Company;
 
 class EmployeeController extends Controller
 {
+
+    function __construct() {
+        $this->binding = new Binding(Employee::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,17 +20,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
+        return $this->binding->index();
     }
 
     /**
@@ -37,34 +32,31 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        error_log(implode(", ", $request->all()));
-        error_log("test");
-        $employeeData = $request->validate([
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'dob' => 'required',
-            'email' => 'required',
-            // todo: id or name? also, validate correctly
-            'company_id' => 'required'
-        ]);
-        //error_log(implode(", ", $employeeData));
-        $employee = new Employee();
-        $employee->firstname = $employeeData['firstname'];
-        $employee->lastname = $employeeData['lastname'];
-        $employee->dob = $employeeData['dob'];
-        $employee->email = $employeeData['email'];
+        $validation_rules = [
+            'firstname' => 'required | string',
+            'lastname' => 'required | string',
+            'dob' => 'required | string',
+            'email' => 'required | email',
+            'company_id' => 'required | exists:companies,id'
+        ];
 
-        $co = Company::find($employeeData['company_id']);
+        //$employee = $this->binding->store($request, $validation_rules);
+
+        $resourceData = $request->validate($validation_rules);
+        $employee = new Employee();
+        $employee->firstname = $resourceData['firstname'];
+        $employee->lastname = $resourceData['lastname'];
+        $employee->dob = $resourceData['dob'];
+        $employee->email = $resourceData['email'];
+
+        error_log($employee->company_id);
+        // establish foreign key relationship with company
+        $co = Company::findOrFail($resourceData['company_id']);
+        //$co = Company::findOrFail($employee->company());
         $employee->company()->associate($co);
-        error_log("testpresave");
         $employee->save();
-        error_log("testpostsave");
-        //Employee::create($employeeData);
-        error_log("test3");
-        return response()->json([
-            'name' => 'Abigail',
-            'state' => 'CA',
-        ]);
+
+        return $employee->toJson();
     }
 
     /**
@@ -75,18 +67,7 @@ class EmployeeController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return $this->binding->show($id);
     }
 
     /**
@@ -98,7 +79,31 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validation_rules = [
+            'firstname' => 'string',
+            'lastname' => 'string',
+            'dob' => 'string',
+            'email' => 'email',
+            'company_id' => 'integer | exists:companies,id'
+        ];
+
+        //$employee = $this->binding->update($request, $validation_rules, $id);
+        $resourceData = $request->validate($validation_rules);
+        $employee = Employee::findOrFail($id);
+
+        foreach($resourceData as $key => $val) {
+            if (array_key_exists($key, $resourceData) && $key != 'company_id')
+            {
+                $employee[$key] = $val;
+            }
+        }
+
+        // establish foreign key relationship with company
+        $co = Company::findOrFail($resourceData['company_id']);
+        $employee->company()->associate($co);
+        $employee->save();
+
+        return $employee->toJson();
     }
 
     /**
@@ -109,6 +114,6 @@ class EmployeeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        return $this->binding->destroy($id);
     }
 }

@@ -8,5 +8,9 @@ echo Started server at PID $artisanpid
 pytest -s -q test_company.py
 pytest -s -q test_employee.py
 
+pkill -P $artisanpid
 kill $artisanpid
-echo Killed $artisanpid
+echo Killed $artisanpid and its children
+
+echo Sanity check:
+ps -ef | grep php
