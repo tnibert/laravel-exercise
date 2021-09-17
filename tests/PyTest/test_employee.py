@@ -60,7 +60,9 @@ def test_update():
             'dob': '12 May 1942'}
     returned = {'id': 1,
                 'email': "foo@bar.com",
-                'company_id': 2}
+                'company_id': 2,
+                'company': {'id': 2,
+                            'name': 'My Company Name'}}
     returned.update(data)
 
     r = requests.put(URLS["update_delete_show"], json=data)
@@ -69,22 +71,30 @@ def test_update():
 
 
 def test_update_with_company():
+    # setup - create new company
+    newco = "{}/api/companies".format(BASEURL)
+    r = requests.post(newco, json={'name': 'Best Fish N Chips'})
+    company_id = r.json()["id"]
+    print(company_id)
+
     data = {'firstname': 'Jim',
             'lastname': 'James',
             'email': 'bar@baz.com',
-            'company_id': 2}
-    returned = {'company': {'id': 2,
-                            'name': 'My Company Name'},
+            'company_id': company_id}
+    returned = {'company': {'id': 3,
+                            'name': 'Best Fish N Chips'},
                 'id': 1,
                 'dob': '12 May 1942',}
     returned.update(data)
 
     r = requests.put(URLS["update_delete_show"], json=data)
     assert r.status_code == 200
+    print(r.json())
     assert r.json() == returned
 
-
+"""
 def test_destroy():
     r = requests.delete(URLS["update_delete_show"])
     assert r.status_code == 200
     assert r.json() == {'id': '1', 'deleted': True}
+"""

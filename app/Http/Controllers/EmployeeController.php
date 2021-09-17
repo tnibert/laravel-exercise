@@ -85,24 +85,11 @@ class EmployeeController extends Controller
             'company_id' => 'integer | exists:companies,id'
         ];
 
-        //$employee = $this->binding->update($request, $validation_rules, $id);
-        $resourceData = $request->validate($validation_rules);
-        $employee = Employee::findOrFail($id);
-
-        foreach($resourceData as $key => $val)
-        {
-            if (array_key_exists($key, $resourceData) && $key != 'company_id')
-            {
-                $employee[$key] = $val;
-            }
-        }
+        $employee = $this->binding->update($request, $validation_rules, $id);
 
         // establish foreign key relationship with company
-        if (array_key_exists('company_id', $resourceData))
-        {
-            $co = Company::findOrFail($resourceData['company_id']);
-            $employee->company()->associate($co);
-        }
+        $co = Company::findOrFail($employee->company_id);
+        $employee->company()->associate($co);
 
         $employee->save();
         return $employee->toJson();
