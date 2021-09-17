@@ -13,11 +13,11 @@
 
                 // Send post requests
                 fetch('http://127.0.0.1:8000/api/companies', {
-                method: "POST",
-                body: JSON.stringify(data1),
-                headers: {
-                    "Content-type": "application/json; charset=UTF-8"
-                }
+                    method: "POST",
+                    body: JSON.stringify(data1),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
                 }).then(res => res.json())
                 .then(res => alert(JSON.stringify(res)));
             }

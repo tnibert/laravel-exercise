@@ -17,7 +17,7 @@ class CreateEmployeesTable extends Migration
             $table->id();
             $table->string('firstname');
             $table->string('lastname');
-            // todo: not string?
+            // todo: represent as date
             $table->string('dob');
             $table->string('email')->unique();
 
