@@ -89,7 +89,8 @@ class EmployeeController extends Controller
         $resourceData = $request->validate($validation_rules);
         $employee = Employee::findOrFail($id);
 
-        foreach($resourceData as $key => $val) {
+        foreach($resourceData as $key => $val)
+        {
             if (array_key_exists($key, $resourceData) && $key != 'company_id')
             {
                 $employee[$key] = $val;
@@ -97,10 +98,13 @@ class EmployeeController extends Controller
         }
 
         // establish foreign key relationship with company
-        $co = Company::findOrFail($resourceData['company_id']);
-        $employee->company()->associate($co);
-        $employee->save();
+        if (array_key_exists('company_id', $resourceData))
+        {
+            $co = Company::findOrFail($resourceData['company_id']);
+            $employee->company()->associate($co);
+        }
 
+        $employee->save();
         return $employee->toJson();
     }
 
