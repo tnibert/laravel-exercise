@@ -75,7 +75,6 @@ def test_update_with_company():
     newco = "{}/api/companies".format(BASEURL)
     r = requests.post(newco, json={'name': 'Best Fish N Chips'})
     company_id = r.json()["id"]
-    print(company_id)
 
     data = {'firstname': 'Jim',
             'lastname': 'James',
@@ -89,12 +88,10 @@ def test_update_with_company():
 
     r = requests.put(URLS["update_delete_show"], json=data)
     assert r.status_code == 200
-    print(r.json())
     assert r.json() == returned
 
-"""
+
 def test_destroy():
     r = requests.delete(URLS["update_delete_show"])
     assert r.status_code == 200
     assert r.json() == {'id': '1', 'deleted': True}
-"""
