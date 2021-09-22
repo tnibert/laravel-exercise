@@ -5,6 +5,8 @@ php ../../artisan serve &
 artisanpid=$!
 echo Started server at PID $artisanpid
 
+sleep 1
+
 pytest -s -q test_company.py
 pytest -s -q test_employee.py
 

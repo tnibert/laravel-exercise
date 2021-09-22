@@ -35,8 +35,6 @@ class Binding
     {
         $resourceData = $request->validate($validate_rules);
         $resource = new $this->model();
-
-        # this is the problem, it cannot handle the foreign key being passed in as integer
         $resource->fill($resourceData);
 
         // mass assignment
